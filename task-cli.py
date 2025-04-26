@@ -13,12 +13,9 @@ def load_tasks(file_path):
         with open(file_path, "r") as file:
             try:
                 write = json.load(file)
-                if isinstance(write, list) == False:
+                if isinstance(write, list) == False or len(write) == 0:
                     with open(file_path, "w") as file:
                         json.dump([], file)
-                len(write) == 0
-                with open(file_path, "w") as file:
-                    json.dump([], file)            
             except json.decoder.JSONDecodeError:
                 with open(file_path, "w") as file:
                     json.dump([], file)
