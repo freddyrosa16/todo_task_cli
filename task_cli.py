@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 
 file_path = "tasks.json"
-unavailable_id = []
 def load_tasks(file_path):
     write = []
     if not os.path.exists(file_path):
@@ -32,16 +31,10 @@ def save_tasks(tasks):
         json.dump(tasks, file)
 
 def add(tasks, user_input):
-    global unavailable_id
-    id_number = 1
-    if len(unavailable_id) == 0:
-        unavailable_id.append(id_number)
-    else:
-        while id_number in unavailable_id:
-            id_number += 1
-        unavailable_id.append(id_number)
-    if user_input.startswith("add"):
-        description = user_input[4:].strip().strip('""')
+    existing_id = [task["id"] for task in tasks if "id" in task and task["id"]]
+    id_number = max(existing_id) + 1 if existing_id else 1
+    
+    description = user_input[4:].strip().strip('""')
     now = datetime.now()
     status = "todo"
     new_tasks = {
@@ -56,23 +49,21 @@ def add(tasks, user_input):
 
 def update(tasks, user_input):
     now = datetime.now()
-    if user_input.startswith("update"):
-        parts = user_input.split()
-        if len(parts) > 2:
-            task_id = int(parts[1])
-            description = ' '.join(parts[2:]).strip().strip('""')
-            for task in tasks:
-                if task["id"] == task_id:
-                    task["description"] = description
-                    task["updatedAt"] = now.isoformat()
-                    save_tasks(tasks)
+    parts = user_input.split()
+    if len(parts) > 2:
+        task_id = int(parts[1])
+        description = ' '.join(parts[2:]).strip('""')
+        for task in tasks:
+            if task["id"] == task_id:
+                task["description"] = description
+                task["updatedAt"] = now.isoformat()
+                save_tasks(tasks)
 
 def delete(tasks, user_input):
-    if user_input.startswith("delete"):
-        parts = user_input.split()
-        if len(parts) == 2:
-            task_id = int(parts[1])
-            for task in tasks:
-                if task["id"] == task_id:
-                    tasks.remove(task)
-                    save_tasks(tasks)
+    parts = user_input.split()
+    if len(parts) == 2:
+        task_id = int(parts[1])
+        for task in tasks:
+            if task["id"] == task_id:
+                tasks.remove(task)
+                save_tasks(tasks)
