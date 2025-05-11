@@ -67,3 +67,35 @@ def delete(tasks, user_input):
             if task["id"] == task_id:
                 tasks.remove(task)
                 save_tasks(tasks)
+
+def in_progress(tasks, user_input):
+    now = datetime.now()
+    status = "in-progress"
+    parts = user_input.split()
+    if len(parts) == 2:
+        task_id = int(parts[1])
+        for task in tasks:
+            if task["id"] == task_id:
+                task["status"] = status
+                task["updatedAt"] = now.isoformat()
+                save_tasks(tasks)
+
+def done(tasks, user_input):
+    now = datetime.now()
+    status = "done"
+    parts = user_input.split()
+    if len(parts) == 2:
+        task_id = int(parts[1])
+        for task in tasks:
+            if task["id"] == task_id:
+                task["status"] = status
+                task["updatedAt"] = now.isoformat()
+                save_tasks(tasks)
+
+def listing(tasks, user_input):
+    parts = user_input.split()
+    if user_input == "list":
+        load_tasks(file_path)
+    if len(parts) == 2:
+        
+
