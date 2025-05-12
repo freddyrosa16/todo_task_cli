@@ -95,7 +95,9 @@ def done(tasks, user_input):
 def listing(tasks, user_input):
     parts = user_input.split()
     if user_input == "list":
-        load_tasks(file_path)
+        for task in tasks:
+            print(f"{task['id']}, {task['description']}, {task['status']}, {task['createdAt']}, {task['updatedAt']}")
     if len(parts) == 2:
-        
-
+        for task in tasks:
+            if task["status"] == parts[1]:
+                print(f"{task['id']}, {task['description']}, {task['status']}, {task['createdAt']}, {task['updatedAt']}")
